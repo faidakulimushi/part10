@@ -1,9 +1,19 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
     backgroundColor: 'white',
+    padding: 15,
+    flexDirection: 'row',
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 5,
+    marginRight: 15,
+  },
+  content: {
+    flex: 1,
   },
   fullName: {
     fontSize: 20,
@@ -12,7 +22,8 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    marginBottom: 8,
+    color: '#586069',
+    marginBottom: 10,
   },
   language: {
     color: 'white',
@@ -20,7 +31,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     padding: 5,
     borderRadius: 5,
-    marginBottom: 10,
+    marginBottom: 15,
   },
   statistics: {
     flexDirection: 'row',
@@ -35,45 +46,65 @@ const styles = StyleSheet.create({
   },
   statisticLabel: {
     fontSize: 14,
+    color: '#586069',
   },
 });
+
+const formatCount = (count) => {
+  if (count >= 1000) {
+    return `${(count / 1000).toFixed(1)}k`;
+  }
+
+  return count.toString();
+};
 
 const RepositoryItem = ({ repository }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.fullName}>{repository.fullName}</Text>
+      <Image
+        style={styles.avatar}
+        source={{ uri: repository.ownerAvatarUrl }}
+      />
 
-      <Text style={styles.description}>{repository.description}</Text>
+      <View style={styles.content}>
+        <Text style={styles.fullName}>{repository.fullName}</Text>
 
-      <Text style={styles.language}>{repository.language}</Text>
+        <Text style={styles.description}>
+          {repository.description}
+        </Text>
 
-      <View style={styles.statistics}>
-        <View style={styles.statistic}>
-          <Text style={styles.statisticValue}>
-            {repository.stargazersCount}
-          </Text>
-          <Text style={styles.statisticLabel}>Stars</Text>
-        </View>
+        <Text style={styles.language}>
+          {repository.language}
+        </Text>
 
-        <View style={styles.statistic}>
-          <Text style={styles.statisticValue}>
-            {repository.forksCount}
-          </Text>
-          <Text style={styles.statisticLabel}>Forks</Text>
-        </View>
+        <View style={styles.statistics}>
+          <View style={styles.statistic}>
+            <Text style={styles.statisticValue}>
+              {formatCount(repository.stargazersCount)}
+            </Text>
+            <Text style={styles.statisticLabel}>Stars</Text>
+          </View>
 
-        <View style={styles.statistic}>
-          <Text style={styles.statisticValue}>
-            {repository.reviewCount}
-          </Text>
-          <Text style={styles.statisticLabel}>Reviews</Text>
-        </View>
+          <View style={styles.statistic}>
+            <Text style={styles.statisticValue}>
+              {formatCount(repository.forksCount)}
+            </Text>
+            <Text style={styles.statisticLabel}>Forks</Text>
+          </View>
 
-        <View style={styles.statistic}>
-          <Text style={styles.statisticValue}>
-            {repository.ratingAverage}
-          </Text>
-          <Text style={styles.statisticLabel}>Rating</Text>
+          <View style={styles.statistic}>
+            <Text style={styles.statisticValue}>
+              {formatCount(repository.reviewCount)}
+            </Text>
+            <Text style={styles.statisticLabel}>Reviews</Text>
+          </View>
+
+          <View style={styles.statistic}>
+            <Text style={styles.statisticValue}>
+              {repository.ratingAverage}
+            </Text>
+            <Text style={styles.statisticLabel}>Rating</Text>
+          </View>
         </View>
       </View>
     </View>
