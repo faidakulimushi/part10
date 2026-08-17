@@ -1,71 +1,58 @@
-import { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  Pressable,
-  Text,
-  Alert,
-} from "react-native";
+import { Formik } from "formik";
+import * as yup from "yup";
+import { StyleSheet, View, Pressable, Text } from "react-native";
+
+import FormikTextInput from "./FormikTextInput";
+
+const initialValues = {
+  username: "",
+  password: "",
+};
+
+const validationSchema = yup.object().shape({
+  username: yup.string().required("Username is required"),
+  password: yup.string().required("Password is required"),
+});
 
 const SignIn = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const onSubmit = () => {
-    const values = {
-      username,
-      password,
-    };
-
+  const onSubmit = (values) => {
     console.log(values);
-
-    Alert.alert(
-      "Sign in",
-      `Username: ${username}\nPassword: ${password}`
-    );
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Username"
-      />
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}
+    >
+      {({ handleSubmit }) => (
+        <View style={styles.container}>
+          <FormikTextInput
+            name="username"
+            placeholder="Username"
+          />
 
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry={true}
-      />
+          <FormikTextInput
+            name="password"
+            placeholder="Password"
+            secureTextEntry
+          />
 
-      <Pressable
-        style={styles.button}
-        onPress={onSubmit}
-      >
-        <Text style={styles.buttonText}>Sign in</Text>
-      </Pressable>
-    </View>
+          <Pressable
+            style={styles.button}
+            onPress={handleSubmit}
+          >
+            <Text style={styles.buttonText}>Sign in</Text>
+          </Pressable>
+        </View>
+      )}
+    </Formik>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    gap: 20,
-  },
-
-  input: {
-    height: 60,
-    borderWidth: 1,
-    borderColor: "#000000",
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    fontSize: 20,
   },
 
   button: {
@@ -74,6 +61,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 10,
   },
 
   buttonText: {
