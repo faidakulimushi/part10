@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -20,10 +19,24 @@ const validationSchema = yup.object().shape({
 const SignInForm = ({ onSubmit }) => {
   return (
     <View style={styles.container}>
-      <FormikTextInput name="username" placeholder="Username" />
-      <FormikTextInput name="password" placeholder="Password" secureTextEntry />
-      <Pressable onPress={onSubmit} style={styles.button}>
-        <Text style={styles.buttonText}>Sign in</Text>
+      <FormikTextInput
+        name="username"
+        placeholder="Username"
+      />
+
+      <FormikTextInput
+        name="password"
+        placeholder="Password"
+        secureTextEntry
+      />
+
+      <Pressable
+        onPress={onSubmit}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>
+          Sign in
+        </Text>
       </Pressable>
     </View>
   );
@@ -36,10 +49,20 @@ const SignIn = () => {
     const { username, password } = values;
 
     try {
-      const { data } = await signIn({ username, password });
-      console.log('ACCESS TOKEN:', data?.authenticate?.accessToken);
+      const { data } = await signIn({
+        username,
+        password,
+      });
+
+      console.log(
+        'ACCESS TOKEN:',
+        data?.authenticate?.accessToken
+      );
     } catch (e) {
-      console.log('FULL SIGN IN ERROR:', JSON.stringify(e, null, 2));
+      console.log(
+        'FULL SIGN IN ERROR:',
+        JSON.stringify(e, null, 2)
+      );
     }
   };
 
@@ -49,7 +72,9 @@ const SignIn = () => {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
+      {({ handleSubmit }) => (
+        <SignInForm onSubmit={handleSubmit} />
+      )}
     </Formik>
   );
 };
@@ -59,6 +84,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: 'white',
   },
+
   button: {
     backgroundColor: '#0366d6',
     padding: 15,
@@ -66,6 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
+
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
