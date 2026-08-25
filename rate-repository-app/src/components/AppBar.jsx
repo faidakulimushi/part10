@@ -1,7 +1,32 @@
-import { StyleSheet, View, ScrollView, Text } from "react-native";
-import { Link } from "react-router-native";
+import { useApolloClient, useQuery, gql } from '@apollo/client';
+import { ScrollView, StyleSheet, View, Pressable } from 'react-native';
+import { Link } from 'react-router-native';
+
+import Text from './Text';
+import AuthStorage from '../utils/authStorage';
+
+const ME = gql`
+  query Me {
+    me {
+      id
+      username
+    }
+  }
+`;
 
 const AppBar = () => {
+  const { data } = useQuery(ME);
+  const apolloClient = useApolloClient();
+
+  const authStorage = new AuthStorage();
+
+  const signOut = async () => {
+    await authStorage.removeAccessToken();
+    await apolloClient.resetStore();
+  };
+
+  const isSignedIn = !!data?.me;
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -13,9 +38,15 @@ const AppBar = () => {
           <Text style={styles.text}>Repositories</Text>
         </Link>
 
-        <Link style={styles.tab} to="/signin">
-          <Text style={styles.text}>Sign in</Text>
-        </Link>
+        {isSignedIn ? (
+          <Pressable style={styles.tab} onPress={signOut}>
+            <Text style={styles.text}>Sign out</Text>
+          </Pressable>
+        ) : (
+          <Link style={styles.tab} to="/signin">
+            <Text style={styles.text}>Sign in</Text>
+          </Link>
+        )}
       </ScrollView>
     </View>
   );
@@ -23,18 +54,19 @@ const AppBar = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#24292e",
+    backgroundColor: '#24292e',
   },
   tabs: {
-    flexDirection: "row",
+    paddingHorizontal: 15,
   },
   tab: {
-    padding: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
   },
   text: {
-    color: "#ffffff",
+    color: 'white',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 
