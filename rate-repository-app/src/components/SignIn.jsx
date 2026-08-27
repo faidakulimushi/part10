@@ -1,21 +1,20 @@
-import { View, Pressable, StyleSheet } from 'react-native';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import { useNavigate } from 'react-router-native';
+import { View, Pressable, StyleSheet } from 'react-native'
+import { Formik } from 'formik'
+import * as yup from 'yup'
 
-import FormikTextInput from './FormikTextInput';
-import Text from './Text';
-import useSignIn from '../hooks/useSignIn';
+import FormikTextInput from './FormikTextInput'
+import Text from './Text'
+import useSignIn from '../hooks/useSignIn'
 
 const initialValues = {
   username: '',
   password: '',
-};
+}
 
 const validationSchema = yup.object().shape({
   username: yup.string().required('Username is required'),
   password: yup.string().required('Password is required'),
-});
+})
 
 const SignInForm = ({ onSubmit }) => {
   return (
@@ -40,27 +39,22 @@ const SignInForm = ({ onSubmit }) => {
         </Text>
       </Pressable>
     </View>
-  );
-};
+  )
+}
 
 const SignIn = () => {
-  const [signIn] = useSignIn();
-  const navigate = useNavigate();
+  const [signIn] = useSignIn()
 
   const onSubmit = async (values) => {
-    const { username, password } = values;
+    const { username, password } = values
 
     try {
-      await signIn({ username, password });
-
-      navigate('/');
+      const { data } = await signIn({ username, password })
+      console.log(data)
     } catch (e) {
-      console.log(
-        'FULL SIGN IN ERROR:',
-        JSON.stringify(e, null, 2)
-      );
+      console.log('FULL SIGN IN ERROR:', e)
     }
-  };
+  }
 
   return (
     <Formik
@@ -72,8 +66,8 @@ const SignIn = () => {
         <SignInForm onSubmit={handleSubmit} />
       )}
     </Formik>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -93,6 +87,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-});
+})
 
-export default SignIn;
+export default SignIn

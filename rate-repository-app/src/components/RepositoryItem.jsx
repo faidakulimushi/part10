@@ -58,16 +58,21 @@ const formatCount = (count) => {
   return count.toString();
 };
 
-const RepositoryItem = ({ repository }) => {
+const RepositoryItem = ({ repository, testID }) => {
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      testID={testID}
+    >
       <Image
         style={styles.avatar}
         source={{ uri: repository.ownerAvatarUrl }}
       />
 
       <View style={styles.content}>
-        <Text style={styles.fullName}>{repository.fullName}</Text>
+        <Text style={styles.fullName}>
+          {repository.fullName}
+        </Text>
 
         <Text style={styles.description}>
           {repository.description}
@@ -82,28 +87,36 @@ const RepositoryItem = ({ repository }) => {
             <Text style={styles.statisticValue}>
               {formatCount(repository.stargazersCount)}
             </Text>
-            <Text style={styles.statisticLabel}>Stars</Text>
+            <Text style={styles.statisticLabel}>
+              Stars
+            </Text>
           </View>
 
           <View style={styles.statistic}>
             <Text style={styles.statisticValue}>
               {formatCount(repository.forksCount)}
             </Text>
-            <Text style={styles.statisticLabel}>Forks</Text>
+            <Text style={styles.statisticLabel}>
+              Forks
+            </Text>
           </View>
 
           <View style={styles.statistic}>
             <Text style={styles.statisticValue}>
               {formatCount(repository.reviewCount)}
             </Text>
-            <Text style={styles.statisticLabel}>Reviews</Text>
+            <Text style={styles.statisticLabel}>
+              Reviews
+            </Text>
           </View>
 
           <View style={styles.statistic}>
             <Text style={styles.statisticValue}>
               {repository.ratingAverage}
             </Text>
-            <Text style={styles.statisticLabel}>Rating</Text>
+            <Text style={styles.statisticLabel}>
+              Rating
+            </Text>
           </View>
         </View>
       </View>

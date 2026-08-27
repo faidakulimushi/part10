@@ -1,40 +1,30 @@
-import { gql, useMutation, useApolloClient } from '@apollo/client';
-import AuthStorage from '../utils/authStorage';
+import { gql, useMutation } from '@apollo/client'
 
 const AUTHENTICATE = gql`
-  mutation Authenticate($credentials: AuthenticateInput!) {
+  mutation Authenticate($credentials: AuthenticateInput) {
     authenticate(credentials: $credentials) {
       accessToken
     }
   }
-`;
+`
 
 const useSignIn = () => {
-  const [mutate, result] = useMutation(AUTHENTICATE);
-  const apolloClient = useApolloClient();
-
-  const authStorage = new AuthStorage();
+  const [mutate, result] = useMutation(AUTHENTICATE)
 
   const signIn = async ({ username, password }) => {
-    const { data } = await mutate({
+    const response = await mutate({
       variables: {
         credentials: {
           username,
           password,
         },
       },
-    });
+    })
 
-    await authStorage.setAccessToken(
-      data.authenticate.accessToken
-    );
+    return response
+  }
 
-    await apolloClient.resetStore();
+  return [signIn, result]
+}
 
-    return { data };
-  };
-
-  return [signIn, result];
-};
-
-export default useSignIn;
+export default useSignIn
