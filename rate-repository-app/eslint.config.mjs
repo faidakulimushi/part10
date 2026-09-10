@@ -18,6 +18,7 @@ export default [
 
       globals: {
         ...globals.browser,
+        ...globals.jest, // 👈 Added Jest globals (describe, it, expect, etc.)
       },
 
       parserOptions: {

@@ -1,127 +1,131 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    padding: 15,
-    flexDirection: 'row',
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 5,
-    marginRight: 15,
-  },
-  content: {
-    flex: 1,
-  },
-  fullName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  description: {
-    fontSize: 16,
-    color: '#586069',
-    marginBottom: 10,
-  },
-  language: {
-    color: 'white',
-    backgroundColor: '#0366d6',
-    alignSelf: 'flex-start',
-    padding: 5,
-    borderRadius: 5,
-    marginBottom: 15,
-  },
-  statistics: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  statistic: {
-    alignItems: 'center',
-  },
-  statisticValue: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  statisticLabel: {
-    fontSize: 14,
-    color: '#586069',
-  },
-});
+import { View, Text, Image, StyleSheet } from 'react-native';
 
 const formatCount = (count) => {
   if (count >= 1000) {
     return `${(count / 1000).toFixed(1)}k`;
   }
 
-  return count.toString();
+  return String(count);
 };
 
-const RepositoryItem = ({ repository, testID }) => {
+const RepositoryItem = ({ repository }) => {
   return (
-    <View
-      style={styles.container}
-      testID={testID}
-    >
-      <Image
-        style={styles.avatar}
-        source={{ uri: repository.ownerAvatarUrl }}
-      />
+    <View testID="repositoryItem" style={styles.container}>
+      {/* Repository information */}
+      <View style={styles.header}>
+        <Image
+          source={{ uri: repository.ownerAvatarUrl }}
+          style={styles.avatar}
+        />
 
-      <View style={styles.content}>
-        <Text style={styles.fullName}>
-          {repository.fullName}
-        </Text>
+        <View style={styles.info}>
+          <Text style={styles.fullName}>
+            {repository.fullName}
+          </Text>
 
-        <Text style={styles.description}>
-          {repository.description}
-        </Text>
+          <Text style={styles.description}>
+            {repository.description}
+          </Text>
 
-        <Text style={styles.language}>
-          {repository.language}
-        </Text>
+          <Text style={styles.language}>
+            {repository.language}
+          </Text>
+        </View>
+      </View>
 
-        <View style={styles.statistics}>
-          <View style={styles.statistic}>
-            <Text style={styles.statisticValue}>
-              {formatCount(repository.stargazersCount)}
-            </Text>
-            <Text style={styles.statisticLabel}>
-              Stars
-            </Text>
-          </View>
+      {/* Repository statistics */}
+      <View style={styles.statistics}>
+        <View style={styles.stat}>
+          <Text style={styles.statNumber}>
+            {formatCount(repository.forksCount)}
+          </Text>
+          <Text style={styles.statLabel}>Forks</Text>
+        </View>
 
-          <View style={styles.statistic}>
-            <Text style={styles.statisticValue}>
-              {formatCount(repository.forksCount)}
-            </Text>
-            <Text style={styles.statisticLabel}>
-              Forks
-            </Text>
-          </View>
+        <View style={styles.stat}>
+          <Text style={styles.statNumber}>
+            {formatCount(repository.stargazersCount)}
+          </Text>
+          <Text style={styles.statLabel}>Stars</Text>
+        </View>
 
-          <View style={styles.statistic}>
-            <Text style={styles.statisticValue}>
-              {formatCount(repository.reviewCount)}
-            </Text>
-            <Text style={styles.statisticLabel}>
-              Reviews
-            </Text>
-          </View>
+        <View style={styles.stat}>
+          <Text style={styles.statNumber}>
+            {repository.ratingAverage}
+          </Text>
+          <Text style={styles.statLabel}>Rating</Text>
+        </View>
 
-          <View style={styles.statistic}>
-            <Text style={styles.statisticValue}>
-              {repository.ratingAverage}
-            </Text>
-            <Text style={styles.statisticLabel}>
-              Rating
-            </Text>
-          </View>
+        <View style={styles.stat}>
+          <Text style={styles.statNumber}>
+            {repository.reviewCount}
+          </Text>
+          <Text style={styles.statLabel}>Reviews</Text>
         </View>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    padding: 15,
+  },
+
+  header: {
+    flexDirection: 'row',
+  },
+
+  avatar: {
+    width: 55,
+    height: 55,
+    borderRadius: 4,
+  },
+
+  info: {
+    flex: 1,
+    marginLeft: 15,
+  },
+
+  fullName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+
+  description: {
+    fontSize: 14,
+    marginBottom: 8,
+  },
+
+  language: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+
+  statistics: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+  },
+
+  stat: {
+    alignItems: 'center',
+  },
+
+  statNumber: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  statLabel: {
+    marginTop: 4,
+    fontSize: 12,
+  },
+});
 
 export default RepositoryItem;

@@ -1,9 +1,14 @@
-/* global process */
+import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import Constants from 'expo-constants';
 
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+// Extract your computer's local IP dynamically from Expo manifest
+const localhost = Constants.expoConfig?.hostUri
+  ? Constants.expoConfig.hostUri.split(':').shift()
+  : 'localhost';
 
-const httpLink = new HttpLink({
-  uri: process.env.EXPO_PUBLIC_APOLLO_URI,
+const httpLink = createHttpLink({
+  // Use computer IP for physical phone / Expo Go
+  uri: `http://${localhost}:4000/graphql`,
 });
 
 const createApolloClient = () => {
