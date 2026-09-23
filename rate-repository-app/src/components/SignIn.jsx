@@ -1,4 +1,6 @@
+
 import { View, Pressable, StyleSheet } from 'react-native'
+import { useNavigate } from 'react-router-native'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 
@@ -44,13 +46,17 @@ const SignInForm = ({ onSubmit }) => {
 
 const SignIn = () => {
   const [signIn] = useSignIn()
+  const navigate = useNavigate()
 
   const onSubmit = async (values) => {
     const { username, password } = values
 
     try {
       const { data } = await signIn({ username, password })
+
       console.log(data)
+
+      navigate('/')
     } catch (e) {
       console.log('FULL SIGN IN ERROR:', e)
     }
@@ -89,4 +95,6 @@ const styles = StyleSheet.create({
   },
 })
 
+export { SignInForm }
 export default SignIn
+

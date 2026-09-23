@@ -1,5 +1,10 @@
+
 import { render, screen, within } from '@testing-library/react-native'
 import { RepositoryListContainer } from '../RepositoryList'
+
+jest.mock('react-router-native', () => ({
+  useNavigate: () => jest.fn(),
+}))
 
 describe('RepositoryList', () => {
   describe('RepositoryListContainer', () => {
@@ -93,3 +98,4 @@ describe('RepositoryList', () => {
     })
   })
 })
+
