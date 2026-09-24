@@ -1,19 +1,37 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import Constants from 'expo-constants';
 
-// Extract your computer's local IP dynamically from Expo manifest
+import AuthStorage from './authStorage';
+
 const localhost = Constants.expoConfig?.hostUri
   ? Constants.expoConfig.hostUri.split(':').shift()
   : 'localhost';
 
 const httpLink = createHttpLink({
-  // Use computer IP for physical phone / Expo Go
   uri: `http://${localhost}:4000/graphql`,
+});
+
+const authStorage = new AuthStorage();
+
+const authLink = setContext(async (_, { headers }) => {
+  const accessToken = await authStorage.getAccessToken();
+
+  return {
+    headers: {
+      ...headers,
+      authorization: accessToken ? `Bearer ${accessToken}` : '',
+    },
+  };
 });
 
 const createApolloClient = () => {
   return new ApolloClient({
-    link: httpLink,
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
   });
 };
