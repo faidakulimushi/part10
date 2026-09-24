@@ -1,9 +1,9 @@
-import { useApolloClient, useQuery, gql } from '@apollo/client';
-import { ScrollView, StyleSheet, View, Pressable } from 'react-native';
-import { Link } from 'react-router-native';
+import { useApolloClient, useQuery, gql } from '@apollo/client'
+import { ScrollView, StyleSheet, View, Pressable } from 'react-native'
+import { Link } from 'react-router-native'
 
-import Text from './Text';
-import AuthStorage from '../utils/authStorage';
+import Text from './Text'
+import AuthStorage from '../utils/authStorage'
 
 const ME = gql`
   query Me {
@@ -12,20 +12,20 @@ const ME = gql`
       username
     }
   }
-`;
+`
 
 const AppBar = () => {
-  const { data } = useQuery(ME);
-  const apolloClient = useApolloClient();
+  const { data } = useQuery(ME)
+  const apolloClient = useApolloClient()
 
-  const authStorage = new AuthStorage();
+  const authStorage = new AuthStorage()
 
   const signOut = async () => {
-    await authStorage.removeAccessToken();
-    await apolloClient.resetStore();
-  };
+    await authStorage.removeAccessToken()
+    await apolloClient.resetStore()
+  }
 
-  const isSignedIn = !!data?.me;
+  const isSignedIn = !!data?.me
 
   return (
     <View style={styles.container}>
@@ -44,19 +44,27 @@ const AppBar = () => {
           </Link>
         )}
 
-        {isSignedIn ? (
+        {!isSignedIn && (
+          <>
+            <Link style={styles.tab} to="/signin">
+              <Text style={styles.text}>Sign in</Text>
+            </Link>
+
+            <Link style={styles.tab} to="/signup">
+              <Text style={styles.text}>Sign up</Text>
+            </Link>
+          </>
+        )}
+
+        {isSignedIn && (
           <Pressable style={styles.tab} onPress={signOut}>
             <Text style={styles.text}>Sign out</Text>
           </Pressable>
-        ) : (
-          <Link style={styles.tab} to="/signin">
-            <Text style={styles.text}>Sign in</Text>
-          </Link>
         )}
       </ScrollView>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -74,6 +82,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+})
 
-export default AppBar;
+export default AppBar
