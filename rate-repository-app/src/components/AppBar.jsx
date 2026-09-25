@@ -6,10 +6,24 @@ import Text from './Text'
 import AuthStorage from '../utils/authStorage'
 
 const ME = gql`
-  query Me {
+  query Me($includeReviews: Boolean = false) {
     me {
       id
       username
+      reviews @include(if: $includeReviews) {
+        edges {
+          node {
+            id
+            text
+            rating
+            createdAt
+            repository {
+              id
+              fullName
+            }
+          }
+        }
+      }
     }
   }
 `
@@ -39,9 +53,15 @@ const AppBar = () => {
         </Link>
 
         {isSignedIn && (
-          <Link style={styles.tab} to="/createreview">
-            <Text style={styles.text}>Create a review</Text>
-          </Link>
+          <>
+            <Link style={styles.tab} to="/createreview">
+              <Text style={styles.text}>Create a review</Text>
+            </Link>
+
+            <Link style={styles.tab} to="/myreviews">
+              <Text style={styles.text}>My reviews</Text>
+            </Link>
+          </>
         )}
 
         {!isSignedIn && (
@@ -70,13 +90,16 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#24292e',
   },
+
   tabs: {
     paddingHorizontal: 15,
   },
+
   tab: {
     paddingHorizontal: 10,
     paddingVertical: 15,
   },
+
   text: {
     color: 'white',
     fontSize: 16,

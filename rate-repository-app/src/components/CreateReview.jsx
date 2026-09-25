@@ -1,4 +1,3 @@
-
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native'
 import { Formik } from 'formik'
 import * as yup from 'yup'
@@ -20,6 +19,7 @@ const validationSchema = yup.object().shape({
     .number()
     .typeError('Rating must be a number')
     .required('Rating is required')
+    .integer('Rating must be a whole number')
     .min(0, 'Rating must be between 0 and 100')
     .max(100, 'Rating must be between 0 and 100'),
 
@@ -36,10 +36,12 @@ const CreateReview = () => {
     try {
       const { data } = await createReview({
         variables: {
-          repositoryName: values.repositoryName.trim(),
-          ownerUsername: values.ownerUsername.trim(),
-          rating: Number(values.rating),
-          text: values.review.trim(),
+          review: {
+            repositoryName: values.repositoryName.trim(),
+            ownerName: values.ownerUsername.trim(),
+            rating: Number(values.rating),
+            text: values.review.trim(),
+          },
         },
       })
 
@@ -140,7 +142,7 @@ const CreateReview = () => {
               styles.button,
               isSubmitting && styles.buttonDisabled,
             ]}
-            onPress={() => handleSubmit()}
+            onPress={handleSubmit}
             disabled={isSubmitting}
           >
             <Text style={styles.buttonText}>
@@ -198,4 +200,3 @@ const styles = StyleSheet.create({
 })
 
 export default CreateReview
-
