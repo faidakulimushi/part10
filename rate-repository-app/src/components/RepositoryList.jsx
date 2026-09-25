@@ -5,9 +5,11 @@ import {
   View,
   Text,
   Pressable,
+  TextInput,
 } from 'react-native'
 import { useNavigate } from 'react-router-native'
 import { Picker } from '@react-native-picker/picker'
+import { useDebounce } from 'use-debounce'
 
 import RepositoryItem from './RepositoryItem'
 import useRepositories from '../hooks/useRepositories'
@@ -21,7 +23,16 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 
-  pickerContainer: {
+  header: {
+    marginBottom: 10,
+  },
+
+  searchInput: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
     marginBottom: 10,
   },
 })
@@ -56,10 +67,17 @@ const RepositoryList = () => {
 
   const [orderBy, setOrderBy] = useState('CREATED_AT')
   const [orderDirection, setOrderDirection] = useState('DESC')
+  const [searchKeyword, setSearchKeyword] = useState('')
+
+  const [debouncedSearchKeyword] = useDebounce(
+    searchKeyword,
+    500,
+  )
 
   const variables = {
     orderBy,
     orderDirection,
+    searchKeyword: debouncedSearchKeyword,
   }
 
   const { repositories, loading, error } =
@@ -101,7 +119,14 @@ const RepositoryList = () => {
       )}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={
-        <View style={styles.pickerContainer}>
+        <View style={styles.header}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search repositories"
+            value={searchKeyword}
+            onChangeText={setSearchKeyword}
+          />
+
           <Picker
             selectedValue={`${orderBy}-${orderDirection}`}
             onValueChange={(value) => {
